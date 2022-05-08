@@ -1,16 +1,26 @@
 import {Controller, Get, Header, Post, Body,} from '@nestjs/common'
-import {User, UsersList, UsersService} from './users.interface'
+import {User, UsersListResponse, UsersService} from './users.interface'
+import {UsersServiceClientOptions} from "./user.options"
+import {Client, ClientGrpc} from "@nestjs/microservices"
 
 @Controller('users')
 export class UserController {
     constructor() {
     }
 
+
+    @Client(UsersServiceClientOptions)
+    private readonly usersServiceClient: ClientGrpc
+
     private usersService: UsersService
+
+    async onModuleInit() {
+        this.usersService = this.usersServiceClient.getService<UsersService>('UsersService')
+    }
 
     @Get()
     @Header('Content-Type', 'application/json')
-    async findUsers(): Promise<UsersList> {
+    async findUsers(): Promise<UsersListResponse> {
         return await this.usersService.findAll(null)
     }
 
@@ -20,7 +30,7 @@ export class UserController {
         return await this.usersService.createUser(input)
     }
 
-    @Post()
+    @Post('update')
     @Header('Content-Type', 'application/json')
     async updateUsers(@Body() input: User): Promise<User> {
         return await this.usersService.updateUser(input)

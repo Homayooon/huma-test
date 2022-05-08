@@ -9,17 +9,22 @@ message User {
 }
 
 message UsersList {
-  repeated User data = 5;
+  repeated User data = 1;
 }
 
 message FindOneRequest {
   int32 id = 1;
 }
 
+message CreateUserRequest {
+  string name = 1;
+}
+
 message FindAllRequest {}
 
 service UsersService {
   rpc findAll (FindAllRequest) returns (UsersList) {}
-  rpc findOne (FindOneRequest) returns (User) {}
+  rpc createUser (CreateUserRequest) returns (User) {}
+  rpc updateUser (User) returns (User) {}
 }
 
