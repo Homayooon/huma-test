@@ -19,7 +19,7 @@ message CreateUserRequest {
 }
 
 message UsersList {
-  repeated User data = 5;
+  repeated User data = 1;
 }
 
 service UsersService {

@@ -4,7 +4,7 @@ export interface User {
     name: string
 }
 
-export interface UsersList {
+export interface UsersListResponse {
     data: Array<User>
 }
 
@@ -17,9 +17,9 @@ export interface CreateUserRequest {
 
 
 export interface UsersService {
-    findAll(input?: FindAllRequest): Promise<UsersList>
-    createUser(input?: CreateUserRequest): Promise<User>
-    updateUser(input?: User): Promise<User>
+    findAll(input?: FindAllRequest): Promise<UsersListResponse>
+    createUser(input: CreateUserRequest): Promise<User>
+    updateUser(input: User): Promise<User>
 
 }
 

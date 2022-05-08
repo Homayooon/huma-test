@@ -1,34 +1,39 @@
 import {Injectable} from '@nestjs/common'
 
-import {CreateUserRequest, FindAllRequest, User, UsersList, UsersService} from './users.interface'
+import {CreateUserRequest, FindAllRequest, User, UsersService} from './users.interface'
+import {InjectRepository} from "@nestjs/typeorm"
+import {UserModel} from "../db/typeorm-models/user.entity"
+import {Repository} from "typeorm"
 
 
 @Injectable()
 export class UsersServiceImplement implements UsersService {
-
-    private users: UsersList = {
-        data: [
-            {
-                id: 1, name: "Ali"
-            },
-            {
-                id: 2, name: "Hamid"
-            },
-        ]
+    constructor(@InjectRepository(UserModel) private userRepo: Repository<UserModel>,
+    ) {
     }
 
-    findAll(input?: FindAllRequest): Promise<UsersList> {
-        return Promise.resolve(this.users);
+    async findAll(input?: FindAllRequest): Promise<Array<UserModel>> {
+        return await this.userRepo.find()
     }
 
 
-    createUser(input: CreateUserRequest): Promise<User> {
-        return Promise.resolve(undefined);
+    async createUser(input: CreateUserRequest): Promise<UserModel> {
+        const user = new UserModel()
+        user.name = input.name
+        await this.userRepo.save(user)
+        return user
     }
 
-    updateUser(input: User): Promise<User> {
-        return Promise.resolve(undefined);
-    }
 
+    async updateUser(input: UserModel): Promise<UserModel> {
+        const user = await this.userRepo.findOne({
+            where: {
+                id: input.id
+            }
+        })
+        user.name = input.name
+        await this.userRepo.save(user)
+        return user
+    }
 
 }

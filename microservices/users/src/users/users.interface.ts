@@ -1,11 +1,8 @@
+import {UserModel} from "../db/typeorm-models/user.entity"
 
 export interface User {
     id: number
     name: string
-}
-
-export interface UsersList {
-    data: Array<User>
 }
 
 export interface FindAllRequest {
@@ -15,11 +12,14 @@ export interface CreateUserRequest {
     name: string
 }
 
+export interface UserListResponse {
+    data: Array<UserModel>
+}
 
 export interface UsersService {
-    findAll(input?: FindAllRequest): Promise<UsersList>
-    createUser(input: CreateUserRequest): Promise<User>
-    updateUser(input: User): Promise<User>
+    findAll(input?: FindAllRequest): Promise<Array<UserModel>>
+    createUser(input: CreateUserRequest): Promise<UserModel>
+    updateUser(input: UserModel): Promise<UserModel>
 
 }
 

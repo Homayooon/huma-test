@@ -1,6 +1,7 @@
-import {Controller, Inject} from '@nestjs/common'
+import {Body, Controller, Get, Inject} from '@nestjs/common'
 import {GrpcMethod} from '@nestjs/microservices'
-import {User, UsersList, UsersService} from "./users.interface"
+import {User, UserListResponse, UsersService} from "./users.interface"
+import {UserModel} from "../db/typeorm-models/user.entity"
 
 
 @Controller()
@@ -9,8 +10,25 @@ export class UsersController {
     }
 
     @GrpcMethod('UsersService', 'findAll')
-    async findAll(): Promise<UsersList> {
+    async findAll(): Promise<UserListResponse> {
 
-        return await this.usersService.findAll()
+        const result = await this.usersService.findAll()
+        return {
+            data: result
+        }
     }
+
+    @GrpcMethod('UsersService', 'createUser')
+    async createUser(@Body() input: User): Promise<UserModel> {
+        return await this.usersService.createUser(input)
+    }
+
+    @GrpcMethod('UsersService', 'updateUser')
+    async updateUser(@Body() input: User): Promise<UserModel> {
+        return await this.usersService.updateUser(input)
+    }
+
+
+
+
 }
