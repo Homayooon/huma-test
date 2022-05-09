@@ -9,7 +9,7 @@ async function bootstrap() {
     origin: '*'
   })
 
-  return app.listen(3000)
+  return app.listen(process.env.PORT || 3000)
 }
 
 bootstrap()

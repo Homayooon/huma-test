@@ -1,6 +1,6 @@
 export default () => ({
-    httpHost: 'localhost',
-    httpPort: process.env.HTTP_PORT || 3000,
+    httpHost: process.env.HTTP_HOST || 'localhost',
+    httpPort: process.env.HTTP_PORT || 50052,
     postgresTypeOrm: {
         host: process.env.POSTGRES_TYPEORM_HOST || 'localhost',
         username: process.env.POSTGRES_TYPEORM_USERNAME || 'postgres',
