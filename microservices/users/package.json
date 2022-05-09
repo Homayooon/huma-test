@@ -24,7 +24,6 @@
     "@nestjs/microservices": "^8.4.4",
     "@nestjs/typeorm": "^8.0.3",
     "faker": "^6.6.6",
-    "grpc": "^1.24.11",
     "lodash": "^4.17.21",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
