@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+
+  api-gateway:
+    image: "api-gateway:dev"
+    build:
+      context: "./api-gateway"
+    volumes:
+      - ./api-gateway:/usr/local/api-gateway
+      - /usr/local/api-gateway/node_modules
+    networks:
+      - "api-gateway-net"
+    ports:
+      - "3000:3000"
+    command: yarn start:dev
+    depends_on:
+      - "users-service"
+    environment:
+      NODE_ENV: "test"
+      PORT: "3000"
+      USERS_SERVICE_URL: "users-service"
+      USERS_SERVICE_PORT: "50052"
+    restart: "on-failure"
+
+  users-service:
+    image: "users-service:dev"
+    build:
+      context: "./microservices/users"
+    volumes:
+      - ./microservices/users:/usr/local/users-service
+      - /usr/local/users-service/node_modules
+    networks:
+      - "microservice-net"
+      - "api-gateway-net"
+      - "users-db-net"
+    expose:
+      - "50052"
+    command: yarn start:dev
+    depends_on:
+      - "users-db"
+    environment:
+      NODE_ENV: "test"
+      HTTP_HOST: "0.0.0.0"
+      HTTP_PORT: "50052"
+      POSTGRES_TYPEORM_DATABASE: "huma_test"
+      POSTGRES_TYPEORM_HOST: "users-db"
+      POSTGRES_TYPEORM_PORT: "5432"
+      POSTGRES_TYPEORM_USERNAME: "postgres"
+      POSTGRES_TYPEORM_PASSWORD: "postgres"
+    restart: "on-failure"
+
+  users-db:
+    image: "postgres:14.1-alpine"
+    networks:
+      - "users-db-net"
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    restart: "on-failure"
+
+networks:
+  microservice-net:
+  api-gateway-net:
+  users-db-net:

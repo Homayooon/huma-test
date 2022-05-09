@@ -1,0 +1,10 @@
+{
+  "name": "huma-test",
+  "version": "1.0.0",
+  "scripts": {
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up api-gateway"
+  },
+  "dependencies": {
+  }
+}
